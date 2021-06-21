@@ -1,0 +1,26 @@
+<!DOCTYPE html >
+{% load static %}
+<html>
+	<head>
+        <meta charset="utf-8"/>
+		<title>Thermal</title>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.css' %}">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	</head>
+	<body>
+
+            <tr class="row m-auto" style="padding-top: 10px">
+                <td class="col m-auto" colspan="3">
+                        <button type="button" class="btn btn-info" style="width: 100%; font-size: 30px;border-radius: 15px ; " onclick="window.location.href='/setlimit/'">Limit Setting</button>
+
+{#                <td class="col m-auto" colspan="3"><button type="button" class="btn btn-warning" style=" width: 100%; font-size: 30px;border-radius: 15px ; ">Clear Alarm Message</button></td>#}
+                <td class="col m-auto" colspan="3"><button type="button" class="btn btn-success" style=" width: 100%; font-size: 30px;border-radius: 15px ; " onclick="window.location.href='/cleanAlarm/'">清除报警信息</button></td>
+            </tr>
+        </table>
+		<script src="{% static 'LocalJs/jquery.min.js' %}"></script>
+{#        <script src="{% static 'LocalJs/getTemp.js' %}"></script>#}
+        <script src="{% static 'LocalJs/homepage.js' %}"></script>
+	</body>
+
+</html>
