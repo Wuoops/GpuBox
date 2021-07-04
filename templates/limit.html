@@ -9,18 +9,38 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	</head>
 	<body>
-
-            <tr class="row m-auto" style="padding-top: 10px">
-                <td class="col m-auto" colspan="3">
-                        <button type="button" class="btn btn-info" style="width: 100%; font-size: 30px;border-radius: 15px ; " onclick="window.location.href='/setlimit/'">Limit Setting</button>
-
-{#                <td class="col m-auto" colspan="3"><button type="button" class="btn btn-warning" style=" width: 100%; font-size: 30px;border-radius: 15px ; ">Clear Alarm Message</button></td>#}
-                <td class="col m-auto" colspan="3"><button type="button" class="btn btn-success" style=" width: 100%; font-size: 30px;border-radius: 15px ; " onclick="window.location.href='/cleanAlarm/'">清除报警信息</button></td>
+    <form class="form-inline my-2 my-lg-0" action="/setlimit" method="get">
+        <table class="table container-fluid m-auto ">
+            <tr class="row m-auto">
+                <td class="col"></td>
+                <th class="col">WARNING LIMIT</th>
+                <th class="col">DANGER LIMIT</th>
+            </tr>
+            <tr class="row m-auto" >
+                <td class="col">GPU Temp Limit</td>
+                <td  class="col"><input name="gpuTempWarning" class="form-control" type="txt" value="{{ gpuTempWarning }}"></td>
+                <td class="col"><input name="gpuTempDanger" class="form-control" type="txt" value="{{ gpuTempDanger }}"></td>
+            </tr>
+            <tr  class="row m-auto" >
+                <td class="col">GPU Power Limit</td>
+                <td class="col"><input name="gpuPowerWarning" class="form-control" type="txt" value="{{ gpuPowerWarning }}"></td>
+                <td class="col"><input name="gpuPowerDanger" class="form-control" type="txt" value="{{ gpuPowerDanger }}"></td>
+            </tr>
+            <tr  class="row m-auto" >
+                <td class="col">Switch Temp Limit</td>
+                <td class="col"><input name="switchTempWarning" class="form-control" type="txt" value="{{ switchTempWarning }}"></td>
+                <td class="col"><input name="switchTempDanger" class="form-control" type="txt" value="{{ switchTempDanger }}"></td>
+            </tr>
+            <tr  class="row m-auto" >
+                <td class="col m-auto" ><button type="button" class="btn btn-info" style="width: 100%; font-size: 30px;border-radius: 15px ; " onclick="window.location.href='/home/'">Back to HomePage</button></td>
+                <td></td>
+                <td class="col m-auto"><input type="submit" class="btn btn-success" style=" width: 100%; font-size: 30px;border-radius: 15px ; "  value="提交"></td>
             </tr>
         </table>
-		<script src="{% static 'LocalJs/jquery.min.js' %}"></script>
+        </form>
+{#		<script src="{% static 'LocalJs/jquery.min.js' %}"></script>#}
 {#        <script src="{% static 'LocalJs/getTemp.js' %}"></script>#}
-        <script src="{% static 'LocalJs/homepage.js' %}"></script>
+{#        <script src="{% static 'LocalJs/homepage.js' %}"></script>#}
 	</body>
 
 </html>

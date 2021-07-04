@@ -11,18 +11,30 @@
 	<body>
         <table class="container-fluid m-auto  " >
             <tr class="row m-auto" style="padding-top: 10px">
-                {% for s in deviceinfo %}
-                <td  class="col-xs m-auto"><button id="{{ s.1 }}_status" type="button" class="btn {{ s.5 }} "  style="width: 100%; height: 100px; font-size: {{ s.4 }}px;border-radius: 50%">{{ s.2 }}</button></td>
+                {% for s in SwitchInfo %}
+                <td  class="col-xs m-auto"><button id="{{ s.1 }}_status" type="button" class="btn {{ s.3 }} "  style="width: 100%; height: 70px; font-size: {{ s.4 }}px;border-radius: 15px">{{ s.1 }}</button></td>
                 {% endfor %}
            </tr>
+            <tr class="row m-auto" style="padding-top: 7px">
+                {% for temp in switchTemp %}
+                <td class="col-xs m-auto"><button id="{{ temp.0 }}_temp"  type="button" class="btn btn-secondary  text-black-50" style="width: 100%;  font-size: 12px;border-radius: 15px ; ">{{ temp.1 }} ℃</button></td>
+                {% endfor %}
+            </tr>
+{#            <tr><td colspan="8"><hr></hr></td></tr>#}
             <tr class="row m-auto" style="padding-top: 10px">
-                {% for s in deviceinfo %}
-                <td class="col-xs m-auto"><button type="button" class="btn btn-secondary " style="width: 100%; height: 100px; font-size: 30px;border-radius: 15px ; ">{{ s.1 }}</button></td>
+                {% for s in gpuinfo %}
+                <td  class="col-xs m-auto"><button id="{{ s.1 }}_status" type="button" class="btn {{ s.3 }} "  style="width: 100%; height: 70px; font-size: {{ s.4 }}px;border-radius: 15px">{{ s.1 }}</button></td>
+                {% endfor %}
+           </tr>
+
+            <tr class="row m-auto" style="padding-top: 7px">
+                {% for temp in gputemp %}
+                <td class="col-xs m-auto"><button id="{{ temp.0 }}_temp"  type="button" class="btn btn-secondary  text-black-50" style="width: 100%;  font-size: 12px;border-radius: 15px ; ">{{ temp.1 }} ℃</button></td>
                 {% endfor %}
             </tr>
             <tr class="row m-auto" style="padding-top: 7px">
-                {% for temp in templist %}
-                <td class="col-xs m-auto"><button id="{{ temp.0 }}_temp"  type="button" class="btn btn-secondary  text-black-50" style="width: 100%;  font-size: 20px;border-radius: 15px ; ">{{ temp.1 }} ℃</button></td>
+                {% for power in gpuPower %}
+                <td class="col-xs m-auto"><button id="{{ power.0 }}Power"  type="button" class="btn btn-secondary  text-black-50" style="width: 100%;  font-size: 12px;border-radius: 15px ; ">{{ power.1 }} W</button></td>
                 {% endfor %}
             </tr>
             <tr class="row m-auto" style="padding-top: 10px">
@@ -34,7 +46,6 @@
             </tr>
         </table>
 		<script src="{% static 'LocalJs/jquery.min.js' %}"></script>
-{#        <script src="{% static 'LocalJs/getTemp.js' %}"></script>#}
         <script src="{% static 'LocalJs/homepage.js' %}"></script>
 	</body>
 

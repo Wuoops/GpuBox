@@ -4,7 +4,8 @@ from dao.mongodbConn import MongoDao
 from utils.util import *
 import random
 from dao.sqliteDb import *
-import config
+from config import *
+
 
 def getTemp():
 #     获取device_info表信息
@@ -12,31 +13,144 @@ def getTemp():
     # print(list)
     mdb = MongoDao()
 
+
     for i in list:
-        print(i[1])
+        # print(i[1])
         temp = random.randint(500, 700) / 10
         mdb.insertOneData(i[1],{'temp':temp,'time':time.time()})
 
+        if temp >= i[3] and temp < i[6]:
+            changeStatus(int(i[0]),'WARNNG')
+            # print(temp)
+        elif temp >= i[6]:
+            changeStatus(int(i[0]),'DANGER')
+            # print(temp)
+# 弃用
+def changeStatus(id,status):
+    sd = sqlDao()
+    changeSql = 'update device_info set deviceinfo = ? , fontsize = ?, btncolor = ? where device_id = ?'
+    # changeSql = 'update device_info set deviceinfo = ? , fontsize = ?, btncolor = ? where device_id = ?'
+    if status == 'WARNNG':
+        args = [WARNNG_sign,WARNNG_font_size,WARNNG_btn_color,id]
+    elif status == 'DANGER':
+        args = [DANGER_sign,DANGER_font_size,DANGER_btn_color,id]
 
-def changeStatus():
-    sd  = sqlDao()
-    limitsql = 'select * from m_limit'
-    limitList = sd.getAll(limitsql)
+    sd.modifyP(changeSql,args)
+    sd.closeConn()
+
+
+#######
+# 修改GPU状态表
+def changeGpuStatus(id,status):
+    sd = sqlDao()
+    changeSql = 'update gpu_info set gpu_status = ? , btn_color = ? where id = ?'
+
+    if status == 'WARNNG':
+        args = [WARNNG_sign,WARNNG_btn_color,id]
+    elif status == 'DANGER':
+        args = [DANGER_sign,DANGER_btn_color,id]
+    sd.modifyP(changeSql,args)
+    sd.closeConn()
+
+def changeSwitchStatus(id,status):
+    sd = sqlDao()
+    changeSql = 'update switch_info set switch_status = ? , btn_color = ? where id = ?'
+
+    if status == 'WARNNG':
+        args = [WARNNG_sign,WARNNG_btn_color,id]
+    elif status == 'DANGER':
+        args = [DANGER_sign,DANGER_btn_color,id]
+    sd.modifyP(changeSql,args)
+    sd.closeConn()
+
+
+def insertGpuTemp():
+    # 获取gpulist
+    list = getGpuInfo()
+    # 获取limit
+    limit = getLimit("GPU")
+    temp_warning = limit[1]
+    temp_danger = limit[2]
+
+    mdb = MongoDao()
+    for i in list:
+        # print(i[1])
+        temp = random.randint(500, 700) / 10
+        mdb.insertOneData(i[1]+'Temp',{'temp':temp,'time':time.time()})
+        if temp >= temp_warning and temp < temp_danger:
+            changeGpuStatus(int(i[0]),'WARNNG')
+            # print(temp)
+        elif temp >= temp_danger:
+            changeGpuStatus(int(i[0]),'DANGER')
+            # print(temp)
+
+# 过去Gpu power
+def insertGpuPower():
+    # 获取gpulist
+    list = getGpuInfo()
+    # 获取limit
+    limit = getLimit("GPU")
+    power_warning = limit[3]
+    power_danger = limit[4]
+
+    mdb = MongoDao()
+    for i in list:
+        # print(i[1])
+        power = random.randint(500, 700)
+        mdb.insertOneData(i[1]+'Power',{'power':power,'time':time.time()})
+        if power >= power_warning and power < power_danger:
+            changeGpuStatus(int(i[0]),'WARNNG')
+            # print(power)
+        elif power >= power_danger:
+            changeGpuStatus(int(i[0]),'DANGER')
+            # print(power)
+
+
+# 获取switch温度
+def insertSwitchTemp():
+    # 获取switch list
+    list = getSwitchInfo()
+    # 获取limit
+    limit = getLimit("SWITCH")
+    temp_warning = limit[1]
+    temp_danger = limit[2]
+
+    mdb = MongoDao()
+    for i in list:
+        # print(i[1])
+        temp = random.randint(500, 700) / 10
+        mdb.insertOneData(i[1] + 'Temp', {'temp': temp, 'time': time.time()})
+        if temp >= temp_warning and temp < temp_danger:
+            changeSwitchStatus(int(i[0]), 'WARNNG')
+            print(temp)
+        elif temp >= temp_danger:
+            changeSwitchStatus(int(i[0]), 'DANGER')
+            # print(temp)
 
 
 
+def insertSwitchPower():
     pass
 
+# 获取limit
+def getLimit(deviceType):
+    sd = sqlDao()
+    getlimitSql = ''' select * from  m_limit where device_type = ? '''
+    args = [deviceType,]
+    limit = sd.getOneP(getlimitSql,args)
+    # temp_warning = limit[1]
+    # temp_danger = limit[2]
+    # power_warning = limit[3]
+    # power_danger = limit[4]
+    # print(limit)
+    return limit
 
-# 根据设备信息写入数据
-# getTemp()
 
+def start():
+    for i in (range(100)):
+        time.sleep(1) ;
+        insertGpuTemp()
+        insertSwitchTemp()
+        insertGpuPower()
 
-
-for i in (range(100)):
-    time.sleep(1) ;
-    getTemp()
-
-
-
-
+# start()

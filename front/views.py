@@ -11,28 +11,85 @@ from dao.sqliteDb import *
 def front(request):
 
     # 获取Device info
-    deviceinfolist = getDeviceInfo()
+    # deviceinfolist = getDeviceInfo()
     # 获取temp list
     mdb = MongoDao()
-    templist = []
+    gputemp = []
 
-    for i in deviceinfolist:
+    # 获取gpu info
+    gpuinfoList = getGpuInfo()
+    # 获取 switch info
+    SwitchInfolist = getSwitchInfo()
+    # 获取 gpu temp
+    for i in gpuinfoList:
         print(i)
-        temp = mdb.selectLast(i[1],1)
-        templist.append([i[1] , temp[0]['temp']])
+        temp = mdb.selectLast(i[1]+'Temp',1)
+        gputemp.append([i[1] , temp[0]['temp']])
+    # 获取 gpupower
+    gpuPower = []
+    for i in gpuinfoList:
+        power = mdb.selectLast(i[1]+'Power',1)
+        gpuPower.append([i[1],power[0]['power']])
+    # 获取 switch temp
+    switchTemp = []
+    for i in SwitchInfolist:
+        print(i)
+        temp = mdb.selectLast(i[1]+'Temp',1)
+        switchTemp.append([i[1] , temp[0]['temp']])
 
-    return render(request,'home.html',{'deviceinfo': deviceinfolist,'templist':templist})
+
+    return render(request,'home.html',{'gpuinfo': gpuinfoList,'SwitchInfo':SwitchInfolist,'gputemp':gputemp,'switchTemp':switchTemp,'gpuPower':gpuPower})
 
 
-def getHomepageTempData(request):
+# 清除报警信息
+def cleanAlarm(request):
+    sd = sqlDao()
+    # cleansql = """ update device_info set deviceinfo = ? , fontsize = ? , btncolor = ?  """
 
-    deviceinfolist = getDeviceInfo()
-    print(deviceinfolist)
+    cleanGpusql = """update gpu_info set gpu_status = ? , btn_color = ?   """
+    cleanSwitchsql = """update switch_info set switch_status = ? , btn_color = ?   """
+
+    args = [HEALTH_sign,HEALTH_btn_color]
+
+    sd.getOneP(cleanGpusql,args)
+    sd.getOneP(cleanSwitchsql,args)
+    sd.closeConn()
+    return redirect('/home')
+
+# 废弃
+def getHomePageStatus(request):
+
+    #获取当前数据库信息
+    sd = sqlDao()
+    getStatusSql= 'select * from device_info'
+    list = sd.getAll(getStatusSql)
+    # print(list.__class__)
+    # print(list)
+    jsonData={'data' : list}
+    # print(jsonData)
+    return JsonResponse(jsonData)
+
+def getGpuStatus(request):
+
+    #获取当前数据库信息
+    sd = sqlDao()
+    getStatusSql= 'select * from gpu_info'
+    list = sd.getAll(getStatusSql)
+    # print(list.__class__)
+    # print(list)
+    jsonData={'data' : list}
+    # print(jsonData)
+    return JsonResponse(jsonData)
+
+
+def getGpuTemp(request):
+    gpuList = getGpuInfo()
+    # print(gpuList)
     tempList = []
     mdb = MongoDao()
-    for i in deviceinfolist:
+    for i in gpuList:
         print(i[1])
-        tempList.append([i[1],mdb.selectLast(i[1],1)[0]['temp']])
+        tempList.append([i[1],mdb.selectLast(i[1]+'Temp',1)[0]['temp']])
     # 查询最后一条温度信息
     print(tempList)
     # temp=mdb.selectLast('inventec', 1)
@@ -40,22 +97,54 @@ def getHomepageTempData(request):
     tempList={'temp':tempList}
     return JsonResponse(tempList)
 
-# 清除报警信息
-def cleanAlarm(request):
-    sd = sqlDao()
-    cleansql = """ update device_info set deviceinfo = ? , fontsize = ? , btncolor = ?  """
-    args = [HEALTH_sign,HEALTH_font_size,HEALTH_btn_color]
-    # print(args)
-    print(sd.getAllP(cleansql,args))
-    sd.closeConn()
-    return redirect('/home')
+def getGpuPower(request):
+    gpuList = getGpuInfo()
+    # print(gpuList)
+    powerList = []
+    mdb = MongoDao()
+    for i in gpuList:
+        print(i[1])
+        powerList.append([i[1],mdb.selectLast(i[1]+'Power',1)[0]['temp']])
+    # 查询最后一条温度信息
+    print(powerList)
+    # temp=mdb.selectLast('inventec', 1)
+    # temp = temp[0]
+    powerList={'power':powerList}
+    return JsonResponse(powerList)
+
+def getGpuPower(request):
+    gpuList = getGpuInfo()
+    # print(gpuList)
+    powerList = []
+    mdb = MongoDao()
+    for i in gpuList:
+        # print(i[1])
+        powerList.append([i[1]+'Power',mdb.selectLast(i[1]+'Power',1)[0]['power']])
+
+    powerList={'power':powerList}
+    return JsonResponse(powerList)
 
 
-def getHomePageStatus(request):
+def getSwitchTemp(request):
+    gpuList = getSwitchInfo()
+    # print(gpuList)
+    tempList = []
+    mdb = MongoDao()
+    for i in gpuList:
+        print(i[1])
+        tempList.append([i[1],mdb.selectLast(i[1]+'Temp',1)[0]['temp']])
+    # 查询最后一条温度信息
+    print(tempList)
+    # temp=mdb.selectLast('inventec', 1)
+    # temp = temp[0]
+    tempList={'temp':tempList}
+    return JsonResponse(tempList)
+
+def getSwitchStatus(request):
 
     #获取当前数据库信息
     sd = sqlDao()
-    getStatusSql= 'select * from device_info'
+    getStatusSql= 'select * from switch_info'
     list = sd.getAll(getStatusSql)
     # print(list.__class__)
     # print(list)

@@ -1,7 +1,9 @@
 import pymongo
 
-# MongoAddr = "mongodb://localhost:27017/"
-MongoAddr = "mongodb://192.168.1.125:27017/"
+MongoAddr = "mongodb://localhost:27017/"
+# MongoAddr = "mongodb://47.241.57.236:27017/"
+
+# MongoAddr = "mongodb://192.168.1.125:27017/"
 Dbname = "inventec"
 
 #MongoDB操作dao层
