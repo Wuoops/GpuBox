@@ -20,25 +20,31 @@ def front(request):
     gpuinfoList = getGpuInfo()
     # 获取 switch info
     SwitchInfolist = getSwitchInfo()
+    # 获取 power meter
+    powerMeterInfoList = getPowerInfo()
+
     # 获取 gpu temp
     for i in gpuinfoList:
-        print(i)
+        # print(i)
         temp = mdb.selectLast(i[1]+'Temp',1)
         gputemp.append([i[1] , temp[0]['temp']])
     # 获取 gpupower
-    gpuPower = []
-    for i in gpuinfoList:
-        power = mdb.selectLast(i[1]+'Power',1)
-        gpuPower.append([i[1],power[0]['power']])
+    powerMeter = []
+    for i in powerMeterInfoList:
+        power = mdb.selectLast('Power'+str(i[0]),1)
+        powerMeter.append([i[0],power[0]['power'] ,i[2]])
+
+    print(powerMeter)
+
     # 获取 switch temp
     switchTemp = []
     for i in SwitchInfolist:
-        print(i)
+        # print(i)
         temp = mdb.selectLast(i[1]+'Temp',1)
         switchTemp.append([i[1] , temp[0]['temp']])
 
 
-    return render(request,'home.html',{'gpuinfo': gpuinfoList,'SwitchInfo':SwitchInfolist,'gputemp':gputemp,'switchTemp':switchTemp,'gpuPower':gpuPower})
+    return render(request,'home.html',{'gpuinfo': gpuinfoList,'SwitchInfo':SwitchInfolist,'gputemp':gputemp,'switchTemp':switchTemp,'powerMeter':powerMeter})
 
 
 # 清除报警信息
@@ -48,11 +54,12 @@ def cleanAlarm(request):
 
     cleanGpusql = """update gpu_info set gpu_status = ? , btn_color = ?   """
     cleanSwitchsql = """update switch_info set switch_status = ? , btn_color = ?   """
-
+    cleanPowersql = 'update power_meter_info set power_status = ? , btn_color = ? '
     args = [HEALTH_sign,HEALTH_btn_color]
 
     sd.getOneP(cleanGpusql,args)
     sd.getOneP(cleanSwitchsql,args)
+    sd.getOneP(cleanPowersql,args)
     sd.closeConn()
     return redirect('/home')
 
@@ -88,40 +95,28 @@ def getGpuTemp(request):
     tempList = []
     mdb = MongoDao()
     for i in gpuList:
-        print(i[1])
+        # print(i[1])
         tempList.append([i[1],mdb.selectLast(i[1]+'Temp',1)[0]['temp']])
     # 查询最后一条温度信息
-    print(tempList)
+    # print(tempList)
     # temp=mdb.selectLast('inventec', 1)
     # temp = temp[0]
     tempList={'temp':tempList}
     return JsonResponse(tempList)
 
-def getGpuPower(request):
-    gpuList = getGpuInfo()
+
+def getPower(request):
+    powerMeterList = getPowerInfo()
     # print(gpuList)
     powerList = []
     mdb = MongoDao()
-    for i in gpuList:
-        print(i[1])
-        powerList.append([i[1],mdb.selectLast(i[1]+'Power',1)[0]['temp']])
-    # 查询最后一条温度信息
-    print(powerList)
-    # temp=mdb.selectLast('inventec', 1)
-    # temp = temp[0]
-    powerList={'power':powerList}
-    return JsonResponse(powerList)
-
-def getGpuPower(request):
-    gpuList = getGpuInfo()
-    # print(gpuList)
-    powerList = []
-    mdb = MongoDao()
-    for i in gpuList:
-        # print(i[1])
-        powerList.append([i[1]+'Power',mdb.selectLast(i[1]+'Power',1)[0]['power']])
+    for i in powerMeterList:
+        # print(i[2])
+        # print(mdb.selectLast( 'Power'+str(i[0]), 1)[0]['power'])
+        powerList.append([ 'Power'+str(i[0]),mdb.selectLast('Power'+str(i[0]),1)[0]['power'] , i[2]])
 
     powerList={'power':powerList}
+    # print(powerList)
     return JsonResponse(powerList)
 
 
@@ -131,10 +126,10 @@ def getSwitchTemp(request):
     tempList = []
     mdb = MongoDao()
     for i in gpuList:
-        print(i[1])
+        # print(i[1])
         tempList.append([i[1],mdb.selectLast(i[1]+'Temp',1)[0]['temp']])
     # 查询最后一条温度信息
-    print(tempList)
+    # print(tempList)
     # temp=mdb.selectLast('inventec', 1)
     # temp = temp[0]
     tempList={'temp':tempList}

@@ -19,23 +19,27 @@ function getGpuTemp(){
         success: function(data){
 			for (i = 0;i<data.temp.length;i++){
 				var ID= data.temp[i][0] ;
-				console.log(data.temp[i][1])
+				// console.log(data.temp[i][1])
 
 				$('#'+ID+'_temp').text(data.temp[i][1]+" ℃");
 			}
         }
     })
 }
-function getGpuPower(){
+function getPower(){
         $.ajax({
-        url: '/getGpuPower/',
+        url: '/getPower/',
         type: 'GET',
         success: function(data){
 			for (i = 0;i<data.power.length;i++){
 				var ID= data.power[i][0] ;
-				console.log(data.power[i][1])
+				console.log(ID)
 
 				$('#'+ID).text(data.power[i][1]+" W");
+                $('#'+ID).attr("class"," btn");
+                $('#'+ID).addClass(data.power[i][2]);
+
+
 			}
         }
     })
@@ -51,7 +55,7 @@ function getGpuStatus(){
                 var px = data.data[i][4];
                 $('#'+ID+'_status').text(data.data[i][1]);
 				// $('#'+ID+'_status').css({'font-size': data.data[i][4]+'px' });
-				console.log(data.data[i][5])
+				// console.log(data.data[i][5])
 				$('#'+ID+'_status').attr("class"," btn");
 				$('#'+ID+'_status').addClass(data.data[i][3]);
             }
@@ -67,7 +71,7 @@ function getSwitchTemp(){
         success: function(data){
 			for (i = 0;i<data.temp.length;i++){
 				var ID= data.temp[i][0] ;
-				console.log(data.temp[i][1])
+				// console.log(data.temp[i][1])
 
 				$('#'+ID+'_temp').text(data.temp[i][1]+" ℃");
 			}
@@ -86,7 +90,7 @@ function getSwitchStatus(){
                 var px = data.data[i][4];
                 $('#'+ID+'_status').text(data.data[i][1]);
 				// $('#'+ID+'_status').css({'font-size': data.data[i][4]+'px' });
-				console.log(data.data[i][5])
+				// console.log(data.data[i][5])
 				$('#'+ID+'_status').attr("class"," btn");
 				$('#'+ID+'_status').addClass(data.data[i][3]);
             }
@@ -95,10 +99,10 @@ function getSwitchStatus(){
         }
     })
 }
-
+// getPower()
 setInterval(function () {
 // 在此处执行获取数据的方法
-    getGpuPower();
+    getPower();
     getGpuStatus();
     getGpuTemp();
     getSwitchTemp();

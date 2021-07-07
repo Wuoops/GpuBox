@@ -50,7 +50,7 @@ def setlimit(request):
 
 
 
-def simdatda(request):
+def simdata(request):
     t1 = Thread(target=start)
     t1.start()
     return HttpResponse('started')

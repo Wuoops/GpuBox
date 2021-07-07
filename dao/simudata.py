@@ -63,6 +63,17 @@ def changeSwitchStatus(id,status):
     sd.modifyP(changeSql,args)
     sd.closeConn()
 
+def changePowerMeterStatus(id,status):
+    sd = sqlDao()
+    changeSql = 'update power_meter_info set power_status = ? , btn_color = ? where id = ?'
+
+    if status == 'WARNNG':
+        args = [WARNNG_sign,WARNNG_btn_color,id]
+        print(args)
+    elif status == 'DANGER':
+        args = [DANGER_sign,DANGER_btn_color,id]
+    sd.modifyP(changeSql,args)
+    sd.closeConn()
 
 def insertGpuTemp():
     # 获取gpulist
@@ -84,26 +95,27 @@ def insertGpuTemp():
             changeGpuStatus(int(i[0]),'DANGER')
             # print(temp)
 
-# 过去Gpu power
-def insertGpuPower():
+# 插入 power数据
+def insertPower():
     # 获取gpulist
-    list = getGpuInfo()
+    list = getPowerInfo()
     # 获取limit
     limit = getLimit("GPU")
     power_warning = limit[3]
     power_danger = limit[4]
-
+    print(power_warning)
     mdb = MongoDao()
     for i in list:
         # print(i[1])
         power = random.randint(500, 700)
-        mdb.insertOneData(i[1]+'Power',{'power':power,'time':time.time()})
+        print(power)
+        mdb.insertOneData('Power'+str(i[0]),{'power':power,'time':time.time()})
         if power >= power_warning and power < power_danger:
-            changeGpuStatus(int(i[0]),'WARNNG')
-            # print(power)
+            changePowerMeterStatus(int(i[0]),'WARNNG')
+            print(power)
         elif power >= power_danger:
-            changeGpuStatus(int(i[0]),'DANGER')
-            # print(power)
+            changePowerMeterStatus(int(i[0]),'DANGER')
+            print(power)
 
 
 # 获取switch温度
@@ -151,6 +163,8 @@ def start():
         time.sleep(1) ;
         insertGpuTemp()
         insertSwitchTemp()
-        insertGpuPower()
+        insertPower()
 
 # start()
+
+insertPower()

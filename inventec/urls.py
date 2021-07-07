@@ -4,7 +4,7 @@ from django.urls import path
 from django.conf.urls import url,include
 
 from front.views import *
-from limit.views import setlimit,simdatda
+from limit.views import setlimit,simdata
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -17,7 +17,7 @@ urlpatterns = [
     url(r'^getGpuStatus/', getGpuStatus),
     url(r'^getSwitchTemp/', getSwitchTemp),
     url(r'^getSwitchStatus/', getSwitchStatus),
-    url(r'^getGpuPower/', getGpuPower),
-    url(r'^simdatda/', simdatda),
+    url(r'^getPower/', getPower),
+    url(r'^simdata/', simdata),
 
 ]

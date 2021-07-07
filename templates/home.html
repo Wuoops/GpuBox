@@ -22,8 +22,8 @@
                 {% endfor %}
             </tr>
             <tr class="row m-auto" style="padding-top: 7px">
-                {% for power in gpuPower %}
-                <td class="col-xs m-auto"><button id="{{ power.0 }}Power"  type="button" class="btn btn-secondary  text-black-50" style="width: 100%;  font-size: 12px;border-radius: 15px ; ">{{ power.1 }} W</button></td>
+                {% for power in powerMeter %}
+                <td class="col-xs m-auto"><button id="Power{{ power.0 }}"  type="button" class="btn {{ power.2 }}  text-black-50" style="width: 100%;  font-size: 12px;border-radius: 15px ; ">{{ power.1 }} W</button></td>
                 {% endfor %}
             </tr>
             <tr class="row m-auto" style="padding-top: 10px">

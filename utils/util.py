@@ -24,8 +24,11 @@ def getSwitchInfo():
     return list
 
 
-
-
+def getPowerInfo():
+    sd = sqlDao()
+    getPowerinfosql = 'select * from power_meter_info'
+    list = sd.getAll(getPowerinfosql)
+    return list
 def cleanAlarmUtil(device: str):
     sd = sqlDao()
     if device == 'all':

@@ -57,5 +57,7 @@ class  MongoDao():
 #
 # mdb = MongoDao()
 # print(mdb)
+
+# print(mdb.selectLast('Power1',1))
 # a = mdb.selectAll('inventec')
 # print(a)
