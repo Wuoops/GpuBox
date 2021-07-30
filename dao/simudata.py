@@ -159,12 +159,13 @@ def getLimit(deviceType):
 
 
 def start():
-    for i in (range(100)):
+    sd = sqlDao()
+    getLinesSql = 'select lines from simdata'
+    lines = sd.getOne(getLinesSql)
+    print(lines[0])
+    for i in (range(lines[0])):
         time.sleep(1) ;
         insertGpuTemp()
         insertSwitchTemp()
         insertPower()
-
 # start()
-
-insertPower()

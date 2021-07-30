@@ -51,6 +51,13 @@ def setlimit(request):
 
 
 def simdata(request):
+    lines = request.GET.get('lines')
+    print(lines)
+    sd = sqlDao()
+    insertLinesSql = 'update simdata set lines = ? '
+    args = [lines,]
+    sd.modifyP(insertLinesSql,args)
+    sd.closeConn()
     t1 = Thread(target=start)
     t1.start()
     return HttpResponse('started')
